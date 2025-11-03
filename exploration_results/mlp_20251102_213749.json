@@ -1,0 +1,114 @@
+[
+  {
+    "config_num": 1,
+    "description": "Baseline - Adam with standard params",
+    "category": "baseline",
+    "params": {
+      "LR": 0.001,
+      "BS": 128,
+      "STEPS": 100
+    },
+    "accuracy": 94.54,
+    "training_time": 31.21,
+    "success": false,
+    "timestamp": "2025-11-02T21:26:48.867876"
+  },
+  {
+    "config_num": 2,
+    "description": "Higher LR - faster convergence test",
+    "category": "learning_rate",
+    "params": {
+      "LR": 0.003,
+      "BS": 128,
+      "STEPS": 100
+    },
+    "accuracy": 94.54,
+    "training_time": 33.73,
+    "success": false,
+    "timestamp": "2025-11-02T21:27:22.608435"
+  },
+  {
+    "config_num": 3,
+    "description": "Lower LR - stability test",
+    "category": "learning_rate",
+    "params": {
+      "LR": 0.0005,
+      "BS": 128,
+      "STEPS": 100
+    },
+    "accuracy": 94.75,
+    "training_time": 34.02,
+    "success": false,
+    "timestamp": "2025-11-02T21:27:56.632616"
+  },
+  {
+    "config_num": 4,
+    "description": "Larger batch - smoother gradients",
+    "category": "batch_size",
+    "params": {
+      "LR": 0.001,
+      "BS": 256,
+      "STEPS": 100
+    },
+    "accuracy": 94.73,
+    "training_time": 33.36,
+    "success": false,
+    "timestamp": "2025-11-02T21:28:30.001306"
+  },
+  {
+    "config_num": 5,
+    "description": "Smaller batch - more updates per epoch",
+    "category": "batch_size",
+    "params": {
+      "LR": 0.001,
+      "BS": 64,
+      "STEPS": 100
+    },
+    "accuracy": 94.94,
+    "training_time": 35.6,
+    "success": false,
+    "timestamp": "2025-11-02T21:29:05.611375"
+  },
+  {
+    "config_num": 6,
+    "description": "Extended training - convergence test",
+    "category": "training_duration",
+    "params": {
+      "LR": 0.001,
+      "BS": 128,
+      "STEPS": 1000
+    },
+    "accuracy": 98.78,
+    "training_time": 249.99,
+    "success": false,
+    "timestamp": "2025-11-02T21:33:16.033029"
+  },
+  {
+    "config_num": 7,
+    "description": "Aggressive - high LR + large batch",
+    "category": "combo",
+    "params": {
+      "LR": 0.002,
+      "BS": 256,
+      "STEPS": 500
+    },
+    "accuracy": 98.18,
+    "training_time": 137.47,
+    "success": false,
+    "timestamp": "2025-11-02T21:35:33.564035"
+  },
+  {
+    "config_num": 8,
+    "description": "Conservative - balanced approach",
+    "category": "combo",
+    "params": {
+      "LR": 0.0008,
+      "BS": 128,
+      "STEPS": 500
+    },
+    "accuracy": 97.81,
+    "training_time": 135.81,
+    "success": false,
+    "timestamp": "2025-11-02T21:37:49.419658"
+  }
+]

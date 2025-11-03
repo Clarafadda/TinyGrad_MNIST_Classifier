@@ -1,0 +1,106 @@
+[
+  {
+    "config_num": 1,
+    "description": "Baseline CNN - standard params",
+    "category": "baseline",
+    "params": {
+      "LR": 0.001,
+      "BS": 128,
+      "STEPS": 100
+    },
+    "accuracy": null,
+    "training_time": 50.01,
+    "timestamp": "2025-11-02T21:43:23.431796"
+  },
+  {
+    "config_num": 2,
+    "description": "Lower LR - CNNs converge slower",
+    "category": "learning_rate",
+    "params": {
+      "LR": 0.0005,
+      "BS": 128,
+      "STEPS": 100
+    },
+    "accuracy": null,
+    "training_time": 74.99,
+    "timestamp": "2025-11-02T21:44:38.434876"
+  },
+  {
+    "config_num": 3,
+    "description": "Higher LR - risk of instability",
+    "category": "learning_rate",
+    "params": {
+      "LR": 0.002,
+      "BS": 128,
+      "STEPS": 100
+    },
+    "accuracy": null,
+    "training_time": 60.31,
+    "timestamp": "2025-11-02T21:45:38.763998"
+  },
+  {
+    "config_num": 4,
+    "description": "Smaller batch - better for CNNs",
+    "category": "batch_size",
+    "params": {
+      "LR": 0.001,
+      "BS": 64,
+      "STEPS": 100
+    },
+    "accuracy": null,
+    "training_time": 42.16,
+    "timestamp": "2025-11-02T21:46:20.926043"
+  },
+  {
+    "config_num": 5,
+    "description": "Larger batch - faster training",
+    "category": "batch_size",
+    "params": {
+      "LR": 0.001,
+      "BS": 256,
+      "STEPS": 100
+    },
+    "accuracy": null,
+    "training_time": 23.42,
+    "timestamp": "2025-11-02T21:46:44.349469"
+  },
+  {
+    "config_num": 6,
+    "description": "More steps - better convergence",
+    "category": "training_duration",
+    "params": {
+      "LR": 0.001,
+      "BS": 128,
+      "STEPS": 1000
+    },
+    "accuracy": null,
+    "training_time": 58.06,
+    "timestamp": "2025-11-02T21:47:42.465454"
+  },
+  {
+    "config_num": 7,
+    "description": "Mini-batch - fine-grained updates",
+    "category": "combo",
+    "params": {
+      "LR": 0.001,
+      "BS": 32,
+      "STEPS": 500
+    },
+    "accuracy": null,
+    "training_time": 42.61,
+    "timestamp": "2025-11-02T21:48:25.090148"
+  },
+  {
+    "config_num": 8,
+    "description": "Balanced - optimal CNN settings",
+    "category": "combo",
+    "params": {
+      "LR": 0.0008,
+      "BS": 64,
+      "STEPS": 500
+    },
+    "accuracy": null,
+    "training_time": 42.87,
+    "timestamp": "2025-11-02T21:49:07.971396"
+  }
+]

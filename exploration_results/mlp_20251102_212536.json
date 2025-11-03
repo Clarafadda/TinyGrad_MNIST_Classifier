@@ -1,0 +1,114 @@
+[
+  {
+    "config_num": 1,
+    "description": "Baseline - Adam with standard params",
+    "category": "baseline",
+    "params": {
+      "LR": 0.001,
+      "BS": 128,
+      "STEPS": 100
+    },
+    "accuracy": null,
+    "training_time": 33.17,
+    "success": false,
+    "timestamp": "2025-11-02T21:14:14.650393"
+  },
+  {
+    "config_num": 2,
+    "description": "Higher LR - faster convergence test",
+    "category": "learning_rate",
+    "params": {
+      "LR": 0.003,
+      "BS": 128,
+      "STEPS": 100
+    },
+    "accuracy": null,
+    "training_time": 36.2,
+    "success": false,
+    "timestamp": "2025-11-02T21:14:50.861577"
+  },
+  {
+    "config_num": 3,
+    "description": "Lower LR - stability test",
+    "category": "learning_rate",
+    "params": {
+      "LR": 0.0005,
+      "BS": 128,
+      "STEPS": 100
+    },
+    "accuracy": null,
+    "training_time": 36.92,
+    "success": false,
+    "timestamp": "2025-11-02T21:15:27.787861"
+  },
+  {
+    "config_num": 4,
+    "description": "Larger batch - smoother gradients",
+    "category": "batch_size",
+    "params": {
+      "LR": 0.001,
+      "BS": 256,
+      "STEPS": 100
+    },
+    "accuracy": null,
+    "training_time": 36.78,
+    "success": false,
+    "timestamp": "2025-11-02T21:16:04.567866"
+  },
+  {
+    "config_num": 5,
+    "description": "Smaller batch - more updates per epoch",
+    "category": "batch_size",
+    "params": {
+      "LR": 0.001,
+      "BS": 64,
+      "STEPS": 100
+    },
+    "accuracy": null,
+    "training_time": 37.05,
+    "success": false,
+    "timestamp": "2025-11-02T21:16:41.619548"
+  },
+  {
+    "config_num": 6,
+    "description": "Extended training - convergence test",
+    "category": "training_duration",
+    "params": {
+      "LR": 0.001,
+      "BS": 128,
+      "STEPS": 1000
+    },
+    "accuracy": null,
+    "training_time": 269.4,
+    "success": false,
+    "timestamp": "2025-11-02T21:21:11.436049"
+  },
+  {
+    "config_num": 7,
+    "description": "Aggressive - high LR + large batch",
+    "category": "combo",
+    "params": {
+      "LR": 0.002,
+      "BS": 256,
+      "STEPS": 500
+    },
+    "accuracy": null,
+    "training_time": 132.53,
+    "success": false,
+    "timestamp": "2025-11-02T21:23:24.110875"
+  },
+  {
+    "config_num": 8,
+    "description": "Conservative - balanced approach",
+    "category": "combo",
+    "params": {
+      "LR": 0.0008,
+      "BS": 128,
+      "STEPS": 500
+    },
+    "accuracy": null,
+    "training_time": 131.9,
+    "success": false,
+    "timestamp": "2025-11-02T21:25:36.049338"
+  }
+]

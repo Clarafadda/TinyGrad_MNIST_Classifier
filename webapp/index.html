@@ -1,0 +1,478 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TinyGrad MNIST Classifier</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .fade-in {
+        animation: fadeIn 0.3s ease-out;
+      }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      }
+    </style>
+  </head>
+
+  <body class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 p-2 sm:p-4 overflow-hidden">
+    <div class="h-screen max-w-7xl mx-auto flex flex-col gap-2 sm:gap-4">
+
+      <!-- Header -->
+      <header class="text-center py-2 sm:py-4 fade-in">
+        <h1 class="text-2xl sm:text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+          ✨ MNIST Digit Classifier
+        </h1>
+        <p class="text-xs sm:text-sm text-slate-600 mt-1">Powered by TinyGrad & WebGPU</p>
+      </header>
+
+      <!-- Main Content Grid -->
+      <div class="flex-1 grid grid-cols-1 lg:grid-cols-5 gap-2 sm:gap-4 min-h-0">
+
+        <!-- Left Panel: Canvas & Tools -->
+        <div class="lg:col-span-3 flex flex-col gap-2 sm:gap-4 min-h-0">
+
+          <!-- Model Selection & Status Card -->
+          <div class="bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-lg p-3 sm:p-4 border border-white/50">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
+              <!-- Model Selection -->
+              <div>
+                <label for="model" class="block text-xs font-semibold text-slate-700 mb-1.5 uppercase tracking-wide">Model</label>
+                <select
+                  id="model"
+                  class="w-full h-10 rounded-lg border-2 border-slate-200 bg-white px-3 text-sm font-medium text-slate-700 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all cursor-pointer"
+                >
+                  <option value="mnist_mlp">🧠 MLP (Fast)</option>
+                  <option value="mnist_convnet">🎯 CNN (Accurate)</option>
+                </select>
+              </div>
+
+              <!-- Status Display -->
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1.5 uppercase tracking-wide">Status</label>
+                <div class="h-10 flex items-center gap-2 px-3 bg-slate-50 rounded-lg border-2 border-slate-200">
+                  <span id="status-indicator" class="flex h-2.5 w-2.5 rounded-full bg-yellow-400 animate-pulse"></span>
+                  <p id="status" class="text-sm font-medium text-slate-700 truncate">Initializing...</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Load Time Display -->
+            <div id="load-time-container" class="mt-3 hidden">
+              <div class="flex items-center justify-center gap-2 text-xs text-slate-600 bg-blue-50 py-2 px-3 rounded-lg">
+                <span>⚡ Model loaded in</span>
+                <span id="load-time" class="font-bold text-blue-600">-</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Drawing Canvas Card -->
+          <div class="flex-1 bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-lg p-3 sm:p-4 border border-white/50 flex flex-col min-h-0">
+            <div class="flex items-center justify-between mb-2 sm:mb-3">
+              <h2 class="text-xs sm:text-sm font-bold text-slate-700 uppercase tracking-wide">✏️ Draw Here</h2>
+
+              <!-- Drawing Tools -->
+              <div class="flex gap-1 sm:gap-2">
+                <button id="pen" class="tool-btn bg-blue-600 text-white border-2 border-blue-600 font-medium rounded-md sm:rounded-lg px-2 sm:px-3 py-1 sm:py-1.5 text-xs transition hover:bg-blue-700 shadow-sm active">
+                  ✏️ <span class="hidden sm:inline">Pen</span>
+                </button>
+                <button id="eraser" class="tool-btn bg-white text-slate-700 border-2 border-slate-200 font-medium rounded-md sm:rounded-lg px-2 sm:px-3 py-1 sm:py-1.5 text-xs transition hover:bg-slate-50">
+                  🧽 <span class="hidden sm:inline">Eraser</span>
+                </button>
+                <button id="clear" class="tool-btn bg-white text-slate-700 border-2 border-slate-200 font-medium rounded-md sm:rounded-lg px-2 sm:px-3 py-1 sm:py-1.5 text-xs transition hover:bg-slate-50">
+                  🗑️ <span class="hidden sm:inline">Clear</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Canvas Container -->
+            <div class="flex-1 flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl border-2 border-slate-200 shadow-inner p-2 min-h-0">
+              <canvas id="canvas" width="400" height="400" class="w-full h-full max-w-full max-h-full cursor-crosshair touch-none rounded-lg bg-white shadow-sm" style="aspect-ratio: 1/1;"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Panel: Results -->
+        <div class="lg:col-span-2 flex flex-col gap-2 sm:gap-4 min-h-0">
+
+          <!-- Prediction Display Card -->
+          <div class="bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl sm:rounded-2xl shadow-xl p-4 sm:p-6 text-white fade-in">
+            <h2 class="text-xs sm:text-sm font-bold uppercase tracking-wide opacity-90 mb-3 sm:mb-4">Prediction</h2>
+            <div class="flex items-center justify-around">
+              <div class="text-center">
+                <p class="text-xs opacity-75 mb-1">Digit</p>
+                <p id="prediction" class="text-4xl sm:text-6xl font-black">-</p>
+              </div>
+              <div class="h-12 sm:h-16 w-px bg-white/30"></div>
+              <div class="text-center">
+                <p class="text-xs opacity-75 mb-1">Confidence</p>
+                <p id="confidence" class="text-2xl sm:text-3xl font-bold">-%</p>
+              </div>
+            </div>
+            <div class="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-white/20 text-center">
+              <p class="text-xs opacity-75">Inference Time</p>
+              <p id="inference-time" class="text-lg sm:text-xl font-semibold mt-1">- ms</p>
+            </div>
+          </div>
+
+          <!-- Probability Distribution Card -->
+          <div class="flex-1 bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-lg p-3 sm:p-4 border border-white/50 flex flex-col min-h-0">
+            <h2 class="text-xs sm:text-sm font-bold text-slate-700 uppercase tracking-wide mb-2 sm:mb-3">📊 Probability Distribution</h2>
+            <div class="flex-1 flex items-end gap-1 sm:gap-1.5 px-1 sm:px-2" id="chart" style="min-height: 120px;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script type="module">
+      // ==================== GLOBALS ====================
+      let currentModel = null;
+      let device = null;
+      let isModelLoaded = false;
+
+      const canvas = document.getElementById("canvas");
+      const ctx = canvas.getContext("2d", { willReadFrequently: true });
+      const modelSelect = document.getElementById("model");
+      const statusText = document.getElementById("status");
+      const statusIndicator = document.getElementById("status-indicator");
+      const loadTimeContainer = document.getElementById("load-time-container");
+      const loadTimeText = document.getElementById("load-time");
+      const predictionText = document.getElementById("prediction");
+      const confidenceText = document.getElementById("confidence");
+      const inferenceTimeText = document.getElementById("inference-time");
+      const chartContainer = document.getElementById("chart");
+
+      let drawing = false;
+      let tool = "pen";
+      let drawTimeout = null;
+
+      // ==================== CANVAS SETUP ====================
+      ctx.fillStyle = "white";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.lineWidth = 20; // Increased for better visibility
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+      ctx.strokeStyle = "black";
+
+      // ==================== STATUS HELPERS ====================
+      function setStatus(message, type = "loading") {
+        statusText.textContent = message;
+        statusIndicator.className = `flex h-2.5 w-2.5 rounded-full ${
+          type === "ready" ? "bg-green-500" :
+          type === "error" ? "bg-red-500 animate-pulse" :
+          "bg-yellow-400 animate-pulse"
+        }`;
+      }
+
+      function setError(message) {
+        setStatus(message, "error");
+        console.error(message);
+      }
+
+      // ==================== WEBGPU INITIALIZATION ====================
+      async function initWebGPU() {
+        try {
+          if (!navigator.gpu) {
+            setError("WebGPU not supported");
+            return false;
+          }
+
+          setStatus("Initializing WebGPU...", "loading");
+          const adapter = await navigator.gpu.requestAdapter();
+
+          if (!adapter) {
+            setError("No WebGPU adapter");
+            return false;
+          }
+
+          const features = [];
+          if (adapter.features.has("shader-f16")) {
+            features.push("shader-f16");
+          }
+
+          device = await adapter.requestDevice({
+            requiredFeatures: features,
+          });
+
+          console.log("✅ WebGPU initialized");
+          return true;
+        } catch (e) {
+          setError(`WebGPU init failed: ${e.message}`);
+          console.error("WebGPU Error:", e);
+          return false;
+        }
+      }
+
+      // ==================== MODEL LOADING ====================
+      async function loadModel(modelName) {
+        if (!device) {
+          setError("WebGPU not ready");
+          return;
+        }
+
+        setStatus(`Loading ${modelName}...`, "loading");
+        isModelLoaded = false;
+        loadTimeContainer.classList.add("hidden");
+
+        const loadStart = performance.now();
+
+        try {
+          const jsPath = `../${modelName}/${modelName}.js`;
+          const weightsPath = `../${modelName}/${modelName}.webgpu.safetensors`;
+
+          // Import the model JS
+          const tinygradModule = await import(jsPath);
+          const tinygrad = tinygradModule.default;
+
+          // Load weights and setup
+          const response = await fetch(weightsPath);
+          if (!response.ok) throw new Error(`Failed to load weights: ${response.statusText}`);
+
+          const weightsBuffer = await response.arrayBuffer();
+          currentModel = await tinygrad.setupNet(device, new Uint8Array(weightsBuffer));
+
+          const loadTime = (performance.now() - loadStart).toFixed(0);
+
+          isModelLoaded = true;
+          setStatus("Ready", "ready");
+          loadTimeText.textContent = `${loadTime}ms`;
+          loadTimeContainer.classList.remove("hidden");
+
+          // Reset display
+          predictionText.textContent = "-";
+          confidenceText.textContent = "-%";
+          inferenceTimeText.textContent = "- ms";
+          renderChart(Array(10).fill(0));
+
+        } catch (e) {
+          setError(`Load failed: ${e.message}`);
+          console.error(e);
+        }
+      }
+
+      // ==================== IMAGE PREPROCESSING ====================
+      function preprocessCanvas() {
+        // Get canvas data
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const data = imageData.data;
+
+        // Create a temporary canvas for 28x28 downsampling
+        const tempCanvas = document.createElement('canvas');
+        tempCanvas.width = 28;
+        tempCanvas.height = 28;
+        const tempCtx = tempCanvas.getContext('2d');
+
+        // Draw scaled down version
+        tempCtx.fillStyle = 'white';
+        tempCtx.fillRect(0, 0, 28, 28);
+        tempCtx.drawImage(canvas, 0, 0, 28, 28);
+
+        // Get 28x28 image data
+        const smallImageData = tempCtx.getImageData(0, 0, 28, 28);
+        const smallData = smallImageData.data;
+
+        // Convert to grayscale and normalize to [-1, 1]
+        const input = new Float32Array(28 * 28);
+        for (let i = 0; i < 28 * 28; i++) {
+          // Average RGB channels and invert (black on white -> white on black)
+          const r = smallData[i * 4];
+          const g = smallData[i * 4 + 1];
+          const b = smallData[i * 4 + 2];
+          const gray = (r + g + b) / 3;
+
+          // Normalize to [-1, 1] and invert
+          input[i] = (255 - gray) / 255 * 2 - 1;
+        }
+
+        return input;
+      }
+
+      // ==================== INFERENCE ====================
+      async function runInference() {
+        if (!isModelLoaded || !currentModel) {
+          return;
+        }
+
+        try {
+          // Preprocess
+          const input = preprocessCanvas();
+
+          // Run inference with timing
+          const start = performance.now();
+          const output = await currentModel(input);
+          const inferenceTime = (performance.now() - start).toFixed(1);
+
+          // Get logits from output
+          const logits = Array.from(new Float32Array(output[0]));
+
+          // Apply softmax
+          const maxLogit = Math.max(...logits);
+          const expLogits = logits.map(x => Math.exp(x - maxLogit));
+          const sumExp = expLogits.reduce((a, b) => a + b, 0);
+          const probabilities = expLogits.map(x => x / sumExp);
+
+          // Get prediction
+          const predictedClass = probabilities.indexOf(Math.max(...probabilities));
+          const confidence = probabilities[predictedClass];
+
+          // Update UI
+          predictionText.textContent = predictedClass;
+          confidenceText.textContent = `${(confidence * 100).toFixed(1)}%`;
+          inferenceTimeText.textContent = `${inferenceTime} ms`;
+          renderChart(probabilities);
+
+        } catch (e) {
+          console.error("Inference error:", e);
+        }
+      }
+
+      // ==================== CHART RENDERING ====================
+      function renderChart(probabilities) {
+        chartContainer.innerHTML = "";
+        const maxProb = Math.max(...probabilities);
+
+        probabilities.forEach((prob, digit) => {
+          const percentage = (prob * 100).toFixed(1);
+          const barHeightPx = Math.max(5, prob * 150); // Min 5px, max 150px
+          const isMax = prob === maxProb && prob > 0;
+
+          const barDiv = document.createElement('div');
+          barDiv.className = 'flex-1 flex flex-col items-center gap-1.5';
+          barDiv.innerHTML = `
+            <span class="text-[9px] font-semibold ${isMax ? 'text-blue-600' : 'text-slate-400'} h-4">${percentage}%</span>
+            <div class="w-full ${isMax ? 'bg-gradient-to-t from-blue-600 to-indigo-600 shadow-lg' : 'bg-slate-300'} rounded-t-md transition-all duration-500 ease-out"
+                 style="height: ${barHeightPx}px; min-height: 5px;"></div>
+            <span class="text-xs font-bold ${isMax ? 'text-blue-600 scale-110' : 'text-slate-600'} mt-0.5 transition-transform">${digit}</span>
+          `;
+          chartContainer.appendChild(barDiv);
+        });
+      }
+
+      // ==================== DRAWING FUNCTIONS ====================
+      function getCoordinates(e) {
+        const rect = canvas.getBoundingClientRect();
+        const scaleX = canvas.width / rect.width;
+        const scaleY = canvas.height / rect.height;
+
+        let x, y;
+        if (e.touches) {
+          x = (e.touches[0].clientX - rect.left) * scaleX;
+          y = (e.touches[0].clientY - rect.top) * scaleY;
+        } else {
+          x = (e.clientX - rect.left) * scaleX;
+          y = (e.clientY - rect.top) * scaleY;
+        }
+        return { x, y };
+      }
+
+      function startDrawing(e) {
+        e.preventDefault();
+        drawing = true;
+        const coords = getCoordinates(e);
+        ctx.beginPath();
+        ctx.moveTo(coords.x, coords.y);
+      }
+
+      function draw(e) {
+        if (!drawing) return;
+        e.preventDefault();
+
+        const coords = getCoordinates(e);
+
+        if (tool === "pen") {
+          ctx.globalCompositeOperation = "source-over";
+          ctx.strokeStyle = "black";
+        } else if (tool === "eraser") {
+          ctx.globalCompositeOperation = "destination-out";
+          ctx.strokeStyle = "rgba(0,0,0,1)";
+        }
+
+        ctx.lineTo(coords.x, coords.y);
+        ctx.stroke();
+
+        // Auto-inference after drawing stops
+        clearTimeout(drawTimeout);
+        drawTimeout = setTimeout(() => {
+          if (isModelLoaded) runInference();
+        }, 300);
+      }
+
+      function stopDrawing() {
+        drawing = false;
+        ctx.beginPath();
+      }
+
+      // Mouse events
+      canvas.addEventListener("mousedown", startDrawing);
+      canvas.addEventListener("mousemove", draw);
+      canvas.addEventListener("mouseup", stopDrawing);
+      canvas.addEventListener("mouseleave", stopDrawing);
+
+      // Touch events for mobile
+      canvas.addEventListener("touchstart", startDrawing);
+      canvas.addEventListener("touchmove", draw);
+      canvas.addEventListener("touchend", stopDrawing);
+
+      // ==================== TOOL BUTTONS ====================
+      const penBtn = document.getElementById("pen");
+      const eraserBtn = document.getElementById("eraser");
+      const clearBtn = document.getElementById("clear");
+      const toolButtons = document.querySelectorAll(".tool-btn");
+
+      function setActiveTool(selected) {
+        toolButtons.forEach((btn) => {
+          btn.classList.remove("bg-blue-600", "text-white", "border-blue-600", "shadow-sm", "active");
+          btn.classList.add("bg-white", "text-slate-700", "border-slate-200");
+        });
+        selected.classList.remove("bg-white", "text-slate-700", "border-slate-200");
+        selected.classList.add("bg-blue-600", "text-white", "border-blue-600", "shadow-sm", "active");
+      }
+
+      penBtn.addEventListener("click", () => {
+        tool = "pen";
+        setActiveTool(penBtn);
+      });
+
+      eraserBtn.addEventListener("click", () => {
+        tool = "eraser";
+        setActiveTool(eraserBtn);
+      });
+
+      clearBtn.addEventListener("click", () => {
+        ctx.fillStyle = "white";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        predictionText.textContent = "-";
+        confidenceText.textContent = "-%";
+        inferenceTimeText.textContent = "- ms";
+        renderChart(Array(10).fill(0));
+        tool = "pen";
+        setActiveTool(penBtn);
+      });
+
+      // ==================== MODEL SELECTION ====================
+      modelSelect.addEventListener("change", (e) => {
+        loadModel(e.target.value);
+      });
+
+      // ==================== INITIALIZATION ====================
+      async function init() {
+        // Initialize chart
+        renderChart(Array(10).fill(0));
+
+        // Initialize WebGPU
+        const webgpuReady = await initWebGPU();
+        if (!webgpuReady) return;
+
+        // Load initial model
+        await loadModel(modelSelect.value);
+      }
+
+      // Start the app
+      init();
+    </script>
+  </body>
+</html>
