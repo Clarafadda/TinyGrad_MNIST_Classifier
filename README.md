@@ -7,10 +7,7 @@ It aims to explore lightweight deep learning inference directly in the browser, 
 
 ![App Screenshot](screenshot application.png)  
 
-### 🔗 **Live Demo**
-
-LIEN 
-
+### 🔗 [**Live Demo here !**](https://clarafadda.github.io/TinyGrad_MNIST_Classifier/)
 
 ---
 
@@ -45,7 +42,48 @@ LIEN
 
 **All training details and tuning experiments are documented here:**  
 ➡️ [HYPERPARAMETERS.md](HYPERPARAMETERS.md)
+---
+## Local Setup and Testing Instructions
 
+To verify your local environment and test the models before deployment, follow these steps:
+
+### Prerequisites
+ - Python 3.10+ (3.12 recommended)
+ - Modern web browser with WebGPU support: Chrome/Edge 113+
+ - Git (for cloning the repository)
+
+1. **Clone the Repository**
+    ```bash
+   git clone https://github.com/Clarafadda/TinyGrad_MNIST_Classifier.git
+   cd TinyGrad_MNIST_Classifier
+2. **Create and activate your virtual environment**
+   ```bash
+   python -m venv .venv
+   source .venv/bin/activate
+3. **Import all the libraries you will need**
+   ```bash
+   pip install -r requirements.txt
+4. **Install WebGPU Support**
+5. **Train a quick model to check the setup**
+    ```bash
+    STEPS=100 JIT=1 python mnist_mlp.py
+6. **Train and import models with the best parameters**
+- MLP :
+  ```bash
+  LR=0.001 BS=128 Steps=1000 JIT=1 python mnist_mlp.py
+- CNN :
+    ```bash
+  LR=0.001, BS=128, Steps=1000 JIT=1 python mnist_convnet.py
+7. **Run the Web Application** : Start server from project root
+    ```bash
+    python -m http.server 8000
+8. **Navigate to http://localhost:8000/webapp/** and:
+
+- Select a model (MLP or CNN)
+- Draw a digit on the canvas
+- See real-time prediction with confidence scores
+
+--- 
 ## Project Retrospective
 
 # A completer
