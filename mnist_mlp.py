@@ -132,7 +132,7 @@ if __name__ == "__main__":
 
     t.set_description(f"lr: {opt.lr.item():2.2e}  loss: {loss.item():2.2f}  accuracy: {best_acc:2.2f}%")
 
-  # IMPORTANT: Désactiver JIT avant l'export
+  # Avant export
   os.environ['JIT'] = '0'
 
   # Réinitialiser le contexte tinygrad
@@ -154,6 +154,6 @@ if __name__ == "__main__":
           print(f"FINAL_ACCURACY: {best_acc:.2f}%")
           print(f"Model exported to {dir_name}/")
       except Exception as e:
-          print(f"⚠️  Export failed: {e}")
+          print(f"Export failed: {e}")
 
   sys.exit(0)

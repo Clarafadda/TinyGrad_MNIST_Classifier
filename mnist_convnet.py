@@ -157,6 +157,6 @@ if __name__ == "__main__":
       print(f"FINAL_ACCURACY: {best_acc:.2f}%")
       print(f"Model exported to {dir_name}/")
     except Exception as e:
-      print(f"⚠️  Export failed: {e}")
+      print(f"Export failed: {e}")
 
   sys.exit(0)
