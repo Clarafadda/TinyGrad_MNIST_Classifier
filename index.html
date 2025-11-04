@@ -221,7 +221,7 @@
         const loadStart = performance.now();
 
         try {
-          const jsPath = `${modelName}/${modelName}.js`;
+          const jsPath = `./${modelName}/${modelName}.js`;
           const weightsPath = `${modelName}/${modelName}.webgpu.safetensors`;
 
           // Import the model JS
