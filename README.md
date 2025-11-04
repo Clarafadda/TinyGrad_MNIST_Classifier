@@ -66,6 +66,15 @@ To verify your local environment and test the models before deployment, follow t
    ```bash
    pip install -r requirements.txt
 4. **Install WebGPU Support**
+- For macOS :
+    ```bash
+    brew tap wpmed92/dawn && brew install dawn
+- For Linux :
+    ```bash
+    sudo curl -L https://github.com/wpmed92/pydawn/releases/download/v0.3.0/libwebgpu_dawn_x86_64.so -o /usr/lib/libwebgpu_dawn.so
+- For Windos : 
+    ```bash
+    pip install dawn-python
 5. **Train a quick model to check the setup**
     ```bash
     STEPS=100 JIT=1 python mnist_mlp.py
