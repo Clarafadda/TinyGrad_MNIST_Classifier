@@ -5,7 +5,7 @@
 This project implements a **digit classifier** using **TinyGrad**, a minimal deep learning framework, and deploys it as a **WebGPU-based web application**.  
 It aims to explore lightweight deep learning inference directly in the browser, combining **Python model training** with **WebGPU acceleration** for frontend prediction visualization.
 
-![App Screenshot](screenshot application.png)  
+![App Screenshot](screen.png)  
 
 ### 🔗 [**Live Demo here !**](https://clarafadda.github.io/TinyGrad_MNIST_Classifier/)
 
@@ -42,7 +42,9 @@ It aims to explore lightweight deep learning inference directly in the browser, 
 
 **All training details and tuning experiments are documented here:**  
 ➡️ [HYPERPARAMETERS.md](HYPERPARAMETERS.md)
+
 ---
+
 ## Local Setup and Testing Instructions
 
 To verify your local environment and test the models before deployment, follow these steps:

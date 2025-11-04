@@ -153,6 +153,31 @@ Best ratio performance/time
   - `BS`: 256
   - `STEPS`: 500
 
+## Unexplored Hyperparameters
+
+In this exploration, I focused only on three hyperparameters: **learning rate (LR)**, **batch size (BS)**, and **number of steps/epochs** for both models (MLP and CNN).
+
+Other important hyperparameters that were not tested could have had a significant impact on performance:
+
+- **Optimizers** (Adam, SGD, RMSprop): Different optimizers can accelerate convergence or stabilize training. For instance, Adam often outperforms SGD on deeper architectures. 
+
+
+- **Activation functions** (ReLU, Tanh, LeakyReLU): Certain functions improve gradient flow and can boost final accuracy, especially for the MLP.  
+
+
+- **Number of layers and neurons / filters**: Increasing model depth or width may enhance learning capacity but could also lead to overfitting.  
+
+
+- **Dropout / Batch Normalization**: Regularization techniques that help stabilize training and improve generalization.  
+
+
+- **Data augmentation parameters (angle, scale)**: Rotating or scaling input images could help the model generalize better by making it more robust to variations in handwriting.
+
+
+- **Kernel size for CNNs**: Different kernel sizes affect how the model captures patterns in the images.
+
+Exploring these parameters could have potentially led to slightly higher performance or faster convergence, while providing more stable test accuracy.
+
 
 ## Comparative Analysis: MLP vs CNN
 
