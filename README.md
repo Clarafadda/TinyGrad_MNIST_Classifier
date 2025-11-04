@@ -88,7 +88,7 @@ To verify your local environment and test the models before deployment, follow t
 7. **Run the Web Application** : Start server from project root
     ```bash
     python -m http.server 8000
-8. **Navigate to http://localhost:8000/webapp/** and:
+8. **Navigate to http://localhost:8000/** and:
 
 - Select a model (MLP or CNN)
 - Draw a digit on the canvas
