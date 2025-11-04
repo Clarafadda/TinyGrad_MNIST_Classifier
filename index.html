@@ -19,7 +19,7 @@
     </style>
   </head>
 
-  <body class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 p-2 sm:p-4 overflow-hidden">
+  <body class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 p-2 sm:p-4">
     <div class="h-screen max-w-7xl mx-auto flex flex-col gap-2 sm:gap-4">
 
       <!-- Header -->
@@ -129,7 +129,7 @@
     </div>
 
     <script type="module">
-      // ==================== GLOBALS ====================
+
       let currentModel = null;
       let device = null;
       let isModelLoaded = false;
@@ -150,15 +150,15 @@
       let tool = "pen";
       let drawTimeout = null;
 
-      // ==================== CANVAS SETUP ====================
+      // Canva
       ctx.fillStyle = "white";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.lineWidth = 20; // Increased for better visibility
+      ctx.lineWidth = 20;
       ctx.lineCap = "round";
       ctx.lineJoin = "round";
       ctx.strokeStyle = "black";
 
-      // ==================== STATUS HELPERS ====================
+      // Status
       function setStatus(message, type = "loading") {
         statusText.textContent = message;
         statusIndicator.className = `flex h-2.5 w-2.5 rounded-full ${
@@ -173,7 +173,7 @@
         console.error(message);
       }
 
-      // ==================== WEBGPU INITIALIZATION ====================
+      // Web GPU
       async function initWebGPU() {
         try {
           if (!navigator.gpu) {
@@ -207,7 +207,7 @@
         }
       }
 
-      // ==================== MODEL LOADING ====================
+      // Model
       async function loadModel(modelName) {
         if (!device) {
           setError("WebGPU not ready");
@@ -254,7 +254,7 @@
         }
       }
 
-      // ==================== IMAGE PREPROCESSING ====================
+      // Image preprocessing
       function preprocessCanvas() {
         // Get canvas data
         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
@@ -291,7 +291,7 @@
         return input;
       }
 
-      // ==================== INFERENCE ====================
+      // inference
       async function runInference() {
         if (!isModelLoaded || !currentModel) {
           return;
@@ -330,7 +330,7 @@
         }
       }
 
-      // ==================== CHART RENDERING ====================
+      // Bar chart
       function renderChart(probabilities) {
         chartContainer.innerHTML = "";
         const maxProb = Math.max(...probabilities);
@@ -352,7 +352,7 @@
         });
       }
 
-      // ==================== DRAWING FUNCTIONS ====================
+      // drawing
       function getCoordinates(e) {
         const rect = canvas.getBoundingClientRect();
         const scaleX = canvas.width / rect.width;
@@ -417,7 +417,7 @@
       canvas.addEventListener("touchmove", draw);
       canvas.addEventListener("touchend", stopDrawing);
 
-      // ==================== TOOL BUTTONS ====================
+      // tools
       const penBtn = document.getElementById("pen");
       const eraserBtn = document.getElementById("eraser");
       const clearBtn = document.getElementById("clear");
@@ -453,12 +453,12 @@
         setActiveTool(penBtn);
       });
 
-      // ==================== MODEL SELECTION ====================
+      // model selection
       modelSelect.addEventListener("change", (e) => {
         loadModel(e.target.value);
       });
 
-      // ==================== INITIALIZATION ====================
+      // initialization
       async function init() {
         // Initialize chart
         renderChart(Array(10).fill(0));
