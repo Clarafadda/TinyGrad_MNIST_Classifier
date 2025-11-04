@@ -86,7 +86,29 @@ To verify your local environment and test the models before deployment, follow t
 --- 
 ## Project Retrospective
 
-# A completer
+During development, I encountered several technical and hardware-related challenges that shaped my understanding of TinyGrad and WebGPU integration.
+
+- **Backend compatibility issues:**  
+  At first, the models would not run properly due to backend errors caused by my operating system version.  
+  I initially suspected that the issue came from my **Python** or **TinyGrad** versions, which led to a lot of debugging before discovering that the actual problem was the **GPU backend configuration**.
+
+
+- **Heavy computation and performance limits:**  
+  My local machine struggled with the computational load during training. Compilations took a very long time, and running large models like the **CNN** required disabling JIT (`JIT=0`) since my hardware could not handle just-in-time compilation efficiently.
+
+  
+- **WebGPU integration:**  
+  Translating model weights and tensor operations into browser-friendly shaders was non-trivial and required multiple testing iterations.
+
+
+- **Optimization:**  
+  Reducing latency in the canvas-to-prediction pipeline required WebAssembly-like optimizations and fine-tuning of model exports.
+
+
+**Key Insight:**  
+Even minimalist frameworks like **TinyGrad** can bridge the gap between Python-based machine learning and in-browser GPU inference.  
+Despite the technical hurdles, this project demonstrated that lightweight and interpretable frameworks can achieve surprisingly strong results when integrated with modern web technologies such as **WebGPU**.
+
 
 ---
 
